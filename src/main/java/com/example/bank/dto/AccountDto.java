@@ -2,25 +2,27 @@ package com.example.bank.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-public class AccountDto {
+@NoArgsConstructor
+@Schema(name = "Account DTO", description = "Account object")
+public class AccountDto implements Serializable {
 
-    Long id;
+    private Long id;
 
     @Past
-    Instant creationDate;
+    private Instant creationDate;
 
     @PositiveOrZero
-    BigDecimal amount;
+    private BigDecimal amount;
 }

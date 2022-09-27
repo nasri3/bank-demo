@@ -7,14 +7,17 @@ package com.example.bank.controller;
 
 import com.example.bank.dto.ClientDto;
 import com.example.bank.service.ClientService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
-//TODO add security
 @RestController
+@Tag(name = "Client API")
 public class ClientController {
 
 
@@ -26,18 +29,33 @@ public class ClientController {
 
 
     @GetMapping(value = "/bank/client", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "Retrieve all clients")
     public List<ClientDto> findAll() {
         return clientService.findAll();
     }
 
-    @PostMapping(value = "/bank/client", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ClientDto addClient(@RequestBody @Valid ClientDto clientDto) {
+    @GetMapping(value = "/bank/client/{clientId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "Retrieve an existing client")
+    public void findClient(@PathVariable @Parameter(name = "clientId", description = "client ID") long clientId) {
+        clientService.findClient(clientId);
+    }
+
+    @PostMapping(value = "/bank/client", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "Create a new client")
+    public ClientDto createClient(@RequestBody @Valid ClientDto clientDto) {
         return clientService.createClient(clientDto);
     }
 
-    @DeleteMapping(value = "/bank/client/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public void delete(@PathVariable long id) {
-        clientService.deleteClient(id);
+    @PatchMapping(value = "/bank/client/{clientId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "Update an existing client")
+    public ClientDto updateClient(@PathVariable @Parameter(name = "clientId", description = "client ID") long clientId, @RequestBody ClientDto clientDto) {
+        return clientService.updateClient(clientId, clientDto);
+    }
+
+    @DeleteMapping(value = "/bank/client/{clientId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(description = "Delete an existing client")
+    public void deleteClient(@PathVariable @Parameter(name = "clientId", description = "client ID") long clientId) {
+        clientService.deleteClient(clientId);
 
     }
 

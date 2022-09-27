@@ -1,39 +1,52 @@
 package com.example.bank.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Data
-public class ClientDto {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Schema(name = "Client DTO", description = "Client object")
+public class ClientDto implements Serializable {
+
+    private Long id;
 
     @NotNull
-    String FirstName;
+    private String firstName;
 
     private String middleName;
 
     @NotNull
-    String LastName;
+    private String lastName;
 
     @Past
-    LocalDateTime dateOfBirth;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateOfBirth;
 
-    String job;
+    private String job;
 
-    BigDecimal averageOfGainPerMonth;
+    private BigDecimal averageOfGainPerMonth;
 
     @NotNull
     @Email
-    String email;
+    private String email;
 
     @NotNull
-    String phoneNumber;
+    private String phoneNumber;
 
-    AccountDto accountDto;
+    private AccountDto accountDto;
 }
