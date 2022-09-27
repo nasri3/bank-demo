@@ -1,9 +1,11 @@
 package com.example.bank.service;
 
 import com.example.bank.Exception.DeniedOperationException;
-import com.example.bank.dto.MovementDto;
+import com.example.bank.dto.MovementReadDto;
+import com.example.bank.dto.MovementWriteDto;
 import com.example.bank.model.Account;
 import com.example.bank.model.Client;
+import com.example.bank.model.Movement;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,11 +14,11 @@ import org.springframework.test.annotation.Rollback;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.clearAllCaches;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class MovementServiceTest {
 
     @Autowired
@@ -39,43 +41,42 @@ class MovementServiceTest {
     }
 
     @Test
-    @Order(1)
     @Rollback
     void depositMoney() {
-        MovementDto movementDto = new MovementDto();
-        movementDto.setAmount(BigDecimal.valueOf(40));
-
-        movementService.depositMoney(account.getId(), movementDto);
+        movementService.depositMoney(account.getId(), new MovementWriteDto(BigDecimal.valueOf(40)));
         Assertions.assertEquals(accountService.findAccount(account.getId()).getAmount().compareTo(BigDecimal.valueOf(40)), 0);
     }
 
     @Test
-    @Order(2)
     @Rollback
     void withdrawMoneyWhenInsufficientBalance() {
-        MovementDto movementDto = new MovementDto();
-        movementDto.setAmount(BigDecimal.valueOf(50));
-
         assertThrows(DeniedOperationException.class, () -> {
-            movementService.withdrawMoney(account.getId(), movementDto);
+            movementService.withdrawMoney(account.getId(), new MovementWriteDto(BigDecimal.valueOf(50)));
         });
 
 
     }
 
     @Test
-    @Order(3)
+    @Rollback
     void withdrawMoneyWhenSufficientBalance() {
-        MovementDto depositMovement = new MovementDto();
-        depositMovement.setAmount(BigDecimal.valueOf(40));
 
-        movementService.depositMoney(account.getId(), depositMovement);
+        movementService.depositMoney(account.getId(), new MovementWriteDto(BigDecimal.valueOf(40)));
 
-        MovementDto movementDto = new MovementDto();
-        movementDto.setAmount(BigDecimal.valueOf(10));
-        movementService.withdrawMoney(account.getId(), movementDto);
+        movementService.withdrawMoney(account.getId(), new MovementWriteDto(BigDecimal.valueOf(10)));
 
         Assertions.assertEquals(accountService.findAccount(account.getId()).getAmount().compareTo(BigDecimal.valueOf(30)), 0);
     }
 
+    @Test
+    void getHistory() {
+        movementService.depositMoney(account.getId(), new MovementWriteDto(BigDecimal.valueOf(40)));
+        movementService.depositMoney(account.getId(), new MovementWriteDto(BigDecimal.valueOf(60)));
+        movementService.withdrawMoney(account.getId(), new MovementWriteDto(BigDecimal.valueOf(30)));
+
+        var movements = movementService.getHistory(account.getId());
+
+        assertEquals(movements.size(), 3);
+        assertEquals(movements.stream().filter(m -> m.getType().equals(Movement.MovementType.DEPOSIT)).count(), 2);
+    }
 }
