@@ -38,8 +38,15 @@ public class ClientService {
     }
 
     public ClientDto createClient(ClientDto clientDto) {
-        Client client = clientMapper.mapToEntity(clientDto);
         log.info("Creating a new account");
+        Client client = clientMapper.mapToEntity(clientDto);
+        return clientMapper.mapToDto(clientRepository.save(client));
+    }
+
+    public ClientDto updateClient(long clientId, ClientDto clientDto) {
+        log.info("Update client {}", clientId);
+        Client client = findClient(clientId);
+        clientMapper.patchEntity(clientDto, client);
         return clientMapper.mapToDto(clientRepository.save(client));
     }
 

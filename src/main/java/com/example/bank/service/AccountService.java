@@ -43,6 +43,12 @@ public class AccountService {
         return accountRepository.findById(accountId).orElseThrow();
     }
 
+    /**
+     * Create a new account for the client
+     *
+     * @param clientId client ID
+     * @return account
+     */
     public Account createAccountForClient(long clientId) {
         log.info("Create a new account  for client {}", clientId);
         Client client = clientService.findClient(clientId);
@@ -55,8 +61,8 @@ public class AccountService {
 
     }
 
-    public Account saveAccount(Account account){
-       return accountRepository.save(account);
+    public Account saveAccount(Account account) {
+        return accountRepository.save(account);
     }
 
 }

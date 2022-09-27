@@ -12,6 +12,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -27,28 +28,28 @@ public class Client {
     Long id;
 
     @Column(length = 60)
-    String FirstName;
+    String firstName;
 
     @Column(length = 60)
     private String middleName;
 
     @Column(length = 60)
-    String LastName;
+    String lastName;
 
-    LocalDateTime dateOfBirth;
+    @Column(nullable = false)
+    LocalDate dateOfBirth;
 
     String job;
 
     BigDecimal averageOfGainPerMonth;
 
+    @Column(nullable = false)
     String email;
 
     /** Mobile phone number (in international format, without space/-/parens, e.g. "+33670268756"). */
     @Column(length = 30)
     String phoneNumber;
 
-    //TODO create address class
-    @Column(nullable = false)
     String address;
 
     @OneToOne
@@ -60,21 +61,21 @@ public class Client {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Client client = (Client) o;
-        return Objects.equals(id, client.id) && Objects.equals(FirstName, client.FirstName) && Objects.equals(middleName, client.middleName) && Objects.equals(LastName, client.LastName) && Objects.equals(dateOfBirth, client.dateOfBirth) && Objects.equals(email, client.email);
+        return Objects.equals(id, client.id) && Objects.equals(firstName, client.firstName) && Objects.equals(middleName, client.middleName) && Objects.equals(lastName, client.lastName) && Objects.equals(dateOfBirth, client.dateOfBirth) && Objects.equals(email, client.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, FirstName, middleName, LastName, dateOfBirth, email);
+        return Objects.hash(id, firstName, middleName, lastName, dateOfBirth, email);
     }
 
     @Override
     public String toString() {
         return "Client{" +
                 "id=" + id +
-                ", FirstName='" + FirstName + '\'' +
+                ", FirstName='" + firstName + '\'' +
                 ", middleName='" + middleName + '\'' +
-                ", LastName='" + LastName + '\'' +
+                ", LastName='" + lastName + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", job='" + job + '\'' +
                 ", averageOfGainPerMonth=" + averageOfGainPerMonth +

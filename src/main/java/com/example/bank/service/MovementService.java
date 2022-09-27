@@ -7,7 +7,8 @@ package com.example.bank.service;
 
 import com.example.bank.Exception.DeniedOperationException;
 import com.example.bank.dao.MovementRepository;
-import com.example.bank.dto.MovementDto;
+import com.example.bank.dto.MovementReadDto;
+import com.example.bank.dto.MovementWriteDto;
 import com.example.bank.mapper.MovementMapper;
 import com.example.bank.model.Account;
 import com.example.bank.model.Movement;
@@ -36,17 +37,17 @@ public class MovementService implements IMovementService {
     /**
      * Deposit money in a client account
      *
-     * @param accountId   account ID
-     * @param movementDto deposit money data
+     * @param accountId        account ID
+     * @param movementWriteDto deposit money data
      * @return movement transaction
      */
     @Override
     @Transactional
-    public MovementDto depositMoney(long accountId, MovementDto movementDto) {
-        log.info("New deposit operation for the account {} with amount {}", accountId, movementDto.getAmount());
+    public MovementReadDto depositMoney(long accountId, MovementWriteDto movementWriteDto) {
+        log.info("New deposit operation for the account {} with amount {}", accountId, movementWriteDto.getAmount());
 
         Account account = accountService.findAccount(accountId);
-        Movement movement = movementMapper.mapToEntity(movementDto);
+        Movement movement = movementMapper.mapToEntity(movementWriteDto);
         movement.setTimestamp(Instant.now());
         movement.setType(Movement.MovementType.DEPOSIT);
 
@@ -59,17 +60,17 @@ public class MovementService implements IMovementService {
     /**
      * Withdrew money from client account
      *
-     * @param accountId   account ID
-     * @param movementDto withdrew data
+     * @param accountId        account ID
+     * @param movementWriteDto withdrew data
      * @return movement transaction
      */
     @Override
     @Transactional
-    public MovementDto withdrawMoney(long accountId, MovementDto movementDto) {
-        log.info("New withdraw operation for the account {} with amount {}", accountId, movementDto.getAmount());
+    public MovementReadDto withdrawMoney(long accountId, MovementWriteDto movementWriteDto) {
+        log.info("New withdraw operation for the account {} with amount {}", accountId, movementWriteDto.getAmount());
 
         Account account = accountService.findAccount(accountId);
-        Movement movement = movementMapper.mapToEntity(movementDto);
+        Movement movement = movementMapper.mapToEntity(movementWriteDto);
 
         movement.setTimestamp(Instant.now());
         movement.setType(Movement.MovementType.WITHDREW);
@@ -92,7 +93,7 @@ public class MovementService implements IMovementService {
      * @return movement list
      */
     @Override
-    public List<MovementDto> getHistory(long accountId) {
+    public List<MovementReadDto> getHistory(long accountId) {
         log.info("Searching for all account {} history ", accountId);
         return movementMapper.mapToDtos(movementRepository.findAllByAccountId(accountId));
     }

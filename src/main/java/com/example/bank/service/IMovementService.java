@@ -1,14 +1,15 @@
 package com.example.bank.service;
 
-import com.example.bank.dto.MovementDto;
+import com.example.bank.dto.MovementReadDto;
+import com.example.bank.dto.MovementWriteDto;
 
 import java.util.List;
 
 public interface IMovementService {
 
-    MovementDto depositMoney(long accountId, MovementDto movementDto);
+    MovementReadDto depositMoney(long accountId, MovementWriteDto movementWriteDto);
 
-    MovementDto withdrawMoney(long accountId, MovementDto movementDto);
+    MovementReadDto withdrawMoney(long accountId, MovementWriteDto movementWriteDto);
 
-    List<MovementDto> getHistory(long accountId);
+    List<MovementReadDto> getHistory(long accountId);
 }
