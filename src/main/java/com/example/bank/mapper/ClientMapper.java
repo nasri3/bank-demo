@@ -2,9 +2,12 @@ package com.example.bank.mapper;
 
 import com.example.bank.dto.ClientDto;
 import com.example.bank.model.Client;
-import org.mapstruct.*;
-
-import javax.persistence.ManyToOne;
+import org.mapstruct.MappingTarget;
+import org.mapstruct.Mapper;
+import org.mapstruct.ReportingPolicy;
+import org.mapstruct.Mapping;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import java.util.List;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring", uses = {AccountMapper.class})

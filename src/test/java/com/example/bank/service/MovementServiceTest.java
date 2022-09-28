@@ -1,12 +1,13 @@
 package com.example.bank.service;
 
 import com.example.bank.Exception.DeniedOperationException;
-import com.example.bank.dto.MovementReadDto;
 import com.example.bank.dto.MovementWriteDto;
 import com.example.bank.model.Account;
 import com.example.bank.model.Client;
 import com.example.bank.model.Movement;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -14,8 +15,8 @@ import org.springframework.test.annotation.Rollback;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.clearAllCaches;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
